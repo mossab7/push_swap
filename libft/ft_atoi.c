@@ -17,10 +17,10 @@ static int	ft_isspace(int c)
 	return (((c >= 9 && c <= 13) || c == 32));
 }
 
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
-	int	sign;
-	int	result;
+	int		sign;
+	long	result;
 
 	sign = 1;
 	result = 0;

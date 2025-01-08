@@ -67,7 +67,7 @@ char	**ft_split(char *str, char c)
 	if (!str)
 		return (NULL);
 	j = ft_countwords(str, c);
-	strptr = (char **)malloc((j + 1) * sizeof(char *));
+	strptr = (char **)allocate_tracked_memory((j + 1) * sizeof(char *));
 	if (strptr == NULL)
 		return (NULL);
 	j = 0;

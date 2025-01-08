@@ -31,10 +31,17 @@ typedef struct stored_s
 
 typedef struct s_alloc_record
 {
-	void					*ptr;
+	void					*resource;
 	void					(*free_func)(void *);
 	struct s_alloc_record	*next;
 }							t_alloc_record;
+
+typedef struct s_vec
+{
+	int						*vector;
+	int						capacity;
+	int						size;
+}							t_vec;
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
@@ -44,7 +51,7 @@ typedef struct s_alloc_record
 #  define OPEN_MAX 1024
 # endif
 
-int							ft_atoi(const char *str);
+long						ft_atoi(const char *str);
 void						ft_putendl_fd(char const *s, int fd);
 void						ft_striteri(char *s, void (*f)(unsigned int,
 									char *));
@@ -104,11 +111,19 @@ char						*get_next_line(int fd);
 t_alloc_record				**get_memory_tracker(void);
 t_alloc_record				*create_memory_record(void *ptr,
 								void (*deallocator)(void *));
-void						register_memory_allocation(
-								t_alloc_record **memory_records,
+void						register_memory_allocation(t_alloc_record **memory_records,
 								t_alloc_record *new_record);
 void						handle_allocation_failure(void *ptr);
 void						*allocate_tracked_memory(size_t size);
-void						cleanup_memory_tracker(
-								t_alloc_record **memory_records);
+void						cleanup_memory_tracker(t_alloc_record **memory_records);
+int							resize(t_vec *vector);
+int							push(t_vec *vector, int num);
+int							pop(t_vec *vector);
+int							is_empty(t_vec *vector);
+void						free_resource(void (*free_func)(void *),
+								void *resource);
+void						detach_resource(t_alloc_record **memory_records,
+								void *target_resource);
+int							constructor(t_vec **vector);
+
 #endif

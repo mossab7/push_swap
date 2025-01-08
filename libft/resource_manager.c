@@ -21,14 +21,14 @@ t_alloc_record	**get_memory_tracker(void)
 	return (&memory_records);
 }
 
-t_alloc_record	*create_memory_record(void *ptr, void (*deallocator)(void *))
+t_alloc_record	*create_memory_record(void *resource, void (*deallocator)(void *))
 {
 	t_alloc_record	*new_record;
 
 	new_record = malloc(sizeof(t_alloc_record));
 	if (!new_record)
 		return (NULL);
-	new_record->ptr = ptr;
+	new_record->resource = resource;
 	new_record->free_func = deallocator;
 	new_record->next = NULL;
 	return (new_record);
@@ -52,9 +52,9 @@ void	register_memory_allocation(t_alloc_record **memory_records,
 	current->next = new_record;
 }
 
-void	handle_allocation_failure(void *ptr)
+void	handle_allocation_failure(void *resource)
 {
-	if (ptr == NULL)
+	if (resource == NULL)
 	{
 		cleanup_memory_tracker(get_memory_tracker());
 		fprintf(stderr, "Fatal: Memory allocation failed\n");
@@ -64,11 +64,11 @@ void	handle_allocation_failure(void *ptr)
 
 void	*allocate_tracked_memory(size_t size)
 {
-	void	*ptr;
+	void	*resource;
 
-	ptr = ft_calloc(size, 1);
-	handle_allocation_failure(ptr);
-	register_memory_allocation(get_memory_tracker(), create_memory_record(ptr,
+	resource = ft_calloc(size, 1);
+	handle_allocation_failure(resource);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(resource,
 			free));
-	return (ptr);
+	return (resource);
 }
