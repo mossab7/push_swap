@@ -4,7 +4,7 @@ int resize(t_vec *vector)
 {
 	int *new_arr;
 
-	new_arr = allocate_tracked_memory(((vector->size) * sizeof(int)) * 2);
+	new_arr = allocate_tracked_memory(((vector->capacity * 2) * sizeof(int)));
 	if(!new_arr)
 		return (-1);
 	ft_memmove(new_arr,vector->vector,vector->size*sizeof(int));
@@ -16,7 +16,7 @@ int resize(t_vec *vector)
 
 int push(t_vec *vector,int num)
 {
-	if(vector->capacity == vector->size)
+	if(vector->capacity - 1 == vector->size)
 	{
 		if(resize(vector) == -1)
 			return (-1);
@@ -32,7 +32,7 @@ int pop(t_vec *vector)
 
 int is_empty(t_vec *vector)
 {
-	return (vector->size == -1);
+	return (vector->size == 0);
 }
 
 int	constructor(t_vec **vector)

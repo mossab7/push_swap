@@ -1,4 +1,4 @@
-#include "libft/libft.h"
+#include "push_swap.h"
 #include <limits.h>
 
 int is_valid_number(t_vec *vector,long num)
@@ -52,7 +52,6 @@ t_vec 	*parse(int size,char **args)
 	t_vec	*result;
 
 	i = 0;
-	// result = allocate_tracked_memory(sizeof(t_vec));
 	constructor(&result);
 	if (!result)
 		return (NULL);
@@ -68,25 +67,4 @@ t_vec 	*parse(int size,char **args)
 	return (result);
 }
 
-int main(int argc, char **argv)
-{
-	t_vec	*result;
 
-	if(argc < 2)
-	{
-		ft_putstr_fd("Error <./push_swap args>\n",2);
-		return (1);
-	}
-	result = parse(argc - 1,argv + 1);
-	if(!result)
-	{
-		cleanup_memory_tracker(get_memory_tracker());
-		return (1);
-	}
-	for(int i = 0; i < result->size; i++)
-	{
-		printf("%d\n",result->vector[i]);
-	}
-	cleanup_memory_tracker(get_memory_tracker());
-	return (0);
-}
