@@ -4,7 +4,7 @@ LIBFT = libft.a
 LIBFT_DIR = libft
 NAME = push_swap
 
-MSRC = main.c parse.c sort.c
+MSRC = main.c parse.c sort.c operations.c
 
 all : $(LIBFT) $(NAME)
 
