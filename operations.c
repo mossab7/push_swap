@@ -73,7 +73,7 @@ int rrr_ab(t_vec *stack_a,t_vec *stack_b,char *msg)
 	return (0);
 }
 
-int s(t_vec *stack,char *msg)
+int swap(t_vec *stack,char *msg)
 {
 	int tmp;
 

@@ -12,6 +12,21 @@ typedef struct s_chunk
 	int		offset;
 }			t_chunk;
 
+typedef enum operations
+{
+	SA,
+	SB,
+	SS,
+	PA,
+	PB,
+	RA,
+	RB,
+	RR,
+	RRA,
+	RRB,
+	RRR
+}e_op;
+
 t_vec		*parse(int size, char **args);
 int			convert_to_int(t_vec *result, char **numbers);
 int			is_valid_number(t_vec *vector, long num);
