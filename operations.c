@@ -51,28 +51,6 @@ int rr(t_vec *stack,char *msg)
 	return (0);
 }
 
-int rr_ab(t_vec *stack_a,t_vec *stack_b,char *msg)
-{
-	if(rr(stack_a,NULL) == -1)
-		return (-1);
-	if(rr(stack_b,NULL) == -1)
-		return (-1);
-	if(msg)
-		ft_putstr_fd(msg,1);
-	return (0);
-}
-
-int rrr_ab(t_vec *stack_a,t_vec *stack_b,char *msg)
-{
-	if(rrr(stack_a,NULL) == -1)
-		return (-1);
-	if(rrr(stack_b,NULL) == -1)
-		return (-1);
-	if(msg)
-		ft_putstr_fd(msg,1);
-	return (0);
-}
-
 int swap(t_vec *stack,char *msg)
 {
 	int tmp;
@@ -82,17 +60,6 @@ int swap(t_vec *stack,char *msg)
 	tmp = stack->vector[stack->size - 1];
 	stack->vector[stack->size - 1] = stack->vector[stack->size - 2];
 	stack->vector[stack->size - 2] = tmp;
-	if(msg)
-		ft_putstr_fd(msg,1);
-	return (0);
-}
-
-int ss(t_vec *stack ,t_vec *stack_b,char *msg)
-{
-	if(s(stack,NULL) == -1)
-		return (-1);
-	if(s(stack_b,NULL) == -1)
-		return (-1);
 	if(msg)
 		ft_putstr_fd(msg,1);
 	return (0);

@@ -7,7 +7,7 @@ int		execute(t_vec *stack_a, t_vec *stack_b, e_op op)
 	else if (op == SB)
 		return (swap(stack_b, "sb\n"));
 	else if (op == SS)
-		return (swap(stack_a, "ss\n") + swap(stack_b, NULL));
+		return (swap(stack_a, NULL) && swap(stack_b, "ss\n"));
 	else if (op == PA)
 		return (p(stack_b, stack_a, "pa\n"));
 	else if (op == PB)
@@ -17,12 +17,12 @@ int		execute(t_vec *stack_a, t_vec *stack_b, e_op op)
 	else if (op == RB)
 		return (rr(stack_b, "rb\n"));
 	else if (op == RR)
-		return (rr(stack_a, "ra\n") + rr(stack_b, NULL));
+		return (rr(stack_a, NULL) && rr(stack_b, "rr\n"));
 	else if (op == RRA)
 		return (rrr(stack_a, "rra\n"));
 	else if (op == RRB)
 		return (rrr(stack_b, "rrb\n"));
 	else if (op == RRR)
-		return (rrr(stack_a, "rra\n") + rrr(stack_b, NULL));
+		return (rrr(stack_a, NULL) && rrr(stack_b, "rrr\n"));
 	return (0);
 }
