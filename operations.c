@@ -1,31 +1,31 @@
 #include "push_swap.h"
 
-int p(t_vec *stack_a, t_vec *stack_b,char *msg)
+int p(t_vec *stack, t_vec *stack_b,char *msg)
 {
-	if(is_empty(stack_a))
+	if(is_empty(stack))
 		return (0);
-	if(push(stack_b, pop(stack_a)) == -1)
+	if(push(stack_b, pop(stack)) == -1)
 		return (-1);
 	if(msg)
 		ft_putstr_fd(msg,1);
 	return (0);
 }
 
-int rrr(t_vec *stack_a,char *msg)
+int rrr(t_vec *stack,char *msg)
 {
 	int i;
 	int temp;
 
-	if(stack_a->size < 2)
+	if(stack->size < 2)
 		return (0);
-	i = stack_a->size - 1;
-	temp = stack_a->vector[i];
+	i = stack->size - 1;
+	temp = stack->vector[i];
 	while(i > 0)
 	{
-		stack_a->vector[i] = stack_a->vector[i - 1];
+		stack->vector[i] = stack->vector[i - 1];
 		i--;
 	}
-	stack_a->vector[0] = temp;
+	stack->vector[0] = temp;
 	if(msg)
 		ft_putstr_fd(msg,1);
 	return (0);

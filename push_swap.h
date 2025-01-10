@@ -35,9 +35,10 @@ void		push_to_stack(t_vec *sorted, t_vec **stack_a);
 int			p(t_vec *stack_a, t_vec *stack_b, char *msg);
 int			rrr(t_vec *stack_a, char *msg);
 int			rr(t_vec *stack, char *msg);
-int			rr_ab(t_vec *stack_a, t_vec *stack_b, char *msg);
-int			rrr_ab(t_vec *stack_a, t_vec *stack_b, char *msg);
 void		pre_sort(t_vec *sorted);
-int			s(t_vec *stack, char *msg);
-int			ss(t_vec *stack, t_vec *stack_b, char *msg);
+int			execute(t_vec *stack_a, t_vec *stack_b, e_op op);
+int			swap(t_vec *stack,char *msg);
+void		init_chunk(t_chunk *chunk);
+void		push_to_stack(t_vec *sorted, t_vec **stack_a);
+void		update_start_end_chunks(t_chunk *chunk);
 #endif

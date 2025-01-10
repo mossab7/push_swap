@@ -83,4 +83,5 @@ void sort(t_chunk *chunk)
 	{
 		printf("%d\n",chunk->sorted->vector[i]);
 	}
+	big_sort(stack_a, stack_b,chunk);
 }
