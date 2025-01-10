@@ -24,37 +24,16 @@ void pre_sort(t_vec *sorted)
 	}
 }
 
-void update_start_end_chunks(t_chunk *chunk)
-{
-	int i;
-	static int j = 1;
-	static int k = 0;
-	//TO DO : Fix the logic for the start and end chunks
-	i = (chunk->sorted->size / 2) - (chunk->offset * j);
-	while(i < chunk->sorted->size / 2)
-	{
-		push(chunk->start, chunk->sorted->vector[i]);
-		i++;
-	}
-	i = (chunk->sorted->size / 2) + (chunk->offset * k);
-	while(i >= chunk->offset)
-	{
-		push(chunk->end, chunk->sorted->vector[i]);
-		i--;
-	}
-}
-
 void init_chunk(t_chunk *chunk)
 {
 	pre_sort(chunk->sorted);
-	constructor(&chunk->start);
-	constructor(&chunk->end);
 	if(chunk->sorted->size <= 10)
 		chunk->offset = chunk->sorted->size / 5;
 	else if(chunk->sorted->size <= 150)
 		chunk->offset = chunk->sorted->size / 8;
 	else
 		chunk->offset = chunk->sorted->size / 18;
+	chunk->mid = chunk->sorted->size / 2;
 }
 
 void push_to_stack(t_vec *sorted, t_vec **stack_a)
@@ -69,6 +48,65 @@ void push_to_stack(t_vec *sorted, t_vec **stack_a)
 	}
 }
 
+int element_in_range(t_vec *stack, t_chunk *chunk,int start, int end)
+{
+	int i;
+	int num;
+
+	i = start;
+	num = pop(stack);
+	while(i < end)
+	{
+		if(num == chunk->sorted->vector[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void update_offset(t_chunk *chunk)
+{
+	
+}
+
+//if the number is before the mid and is not pushed to stack a RR till that nunber is on top is it's in ther other half RRR
+//if the number
+int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+{
+	int i;
+
+	i = 0;
+	while(!is_empty(stack_a))
+	{
+		update_offset(chunk);
+		if(element_in_range(stack_a,chunk,chunk->start,chunk->end))
+		{
+			if(execute(stack_a, stack_b, PB) == -1)
+				return (-1);
+			if(element_in_range(stack_b,chunk,chunk->mid,chunk->end))
+			{
+				if(execute(stack_a, stack_b, RB) == -1)
+					return (-1);
+			}
+		}
+		else
+		{
+			if(i < stack_a->size / 2)
+			{
+				if(execute(stack_a, stack_b, RA) == -1)
+					return (-1);
+			}
+			else
+			{
+				if(execute(stack_a, stack_b, RRA) == -1)
+					return (-1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 void sort(t_chunk *chunk)
 {
 	t_vec *stack_a;
@@ -76,12 +114,16 @@ void sort(t_chunk *chunk)
 
 	constructor(&stack_a);
 	constructor(&stack_b);
-	push_to_stack(chunk->sorted, &stack_a);
+	// push_to_stack(chunk->sorted, &stack_a);
 	init_chunk(chunk);
-	update_start_end_chunks(chunk);
 	for(int i = 0; i < chunk->sorted->size; i++)
 	{
 		printf("%d\n",chunk->sorted->vector[i]);
 	}
 	big_sort(stack_a, stack_b,chunk);
+	printf("-----------------\n");
+	for(int i = 0; i < stack_a->size; i++)
+	{
+		printf("%d\n",stack_a->vector[i]);
+	}
 }

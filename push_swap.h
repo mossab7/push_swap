@@ -7,8 +7,9 @@
 typedef struct s_chunk
 {
 	t_vec	*sorted;
-	t_vec	*start;
-	t_vec	*end;
+	int		start;
+	int		mid;
+	int		end;
 	int		offset;
 }			t_chunk;
 

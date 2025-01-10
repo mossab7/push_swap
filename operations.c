@@ -39,6 +39,7 @@ int rr(t_vec *stack,char *msg)
 	i = 0;
 	if(stack->size < 2)
 		return (0);
+	
 	tmp = stack->vector[0];
 	while(i < stack->size - 1)
 	{

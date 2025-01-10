@@ -27,7 +27,7 @@ int push(t_vec *vector,int num)
 
 int pop(t_vec *vector)
 {
-	return (vector->vector[vector->size--]);
+	return (vector->vector[(vector->size--) - 1]);
 }
 
 int is_empty(t_vec *vector)
