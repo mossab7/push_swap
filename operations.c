@@ -1,10 +1,10 @@
 #include "push_swap.h"
 
-int p(t_vec *stack, t_vec *stack_b,char *msg)
+int p(t_vec *pop_stack, t_vec *push_stack,char *msg)
 {
-	if(is_empty(stack))
+	if(is_empty(pop_stack))
 		return (0);
-	if(push(stack_b, pop(stack)) == -1)
+	if(push(push_stack, pop(pop_stack)) == -1)
 		return (-1);
 	if(msg)
 		ft_putstr_fd(msg,1);
@@ -39,7 +39,7 @@ int rr(t_vec *stack,char *msg)
 	i = 0;
 	if(stack->size < 2)
 		return (0);
-	
+
 	tmp = stack->vector[0];
 	while(i < stack->size - 1)
 	{
