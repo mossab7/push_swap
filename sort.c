@@ -115,12 +115,26 @@ void update_offset(t_vec *stack_b,t_chunk *chunk)
 	}
 }
 
-
-int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+int get_position(t_vec *stack, t_chunk *s_chunk)
 {
 	int i;
 
 	i = 0;
+	while (i < stack->size)
+	{
+		if (stack->vector[i] >= s_chunk->sorted->vector[s_chunk->start] &&
+			stack->vector[i] <= s_chunk->sorted->vector[s_chunk->end])
+			return i;
+		i++;
+	}
+	return -1;
+}
+
+
+int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+{
+	int pos;
+
 	while(!is_empty(stack_a))
 	{
 		update_offset(stack_b,chunk);
@@ -128,7 +142,7 @@ int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 		{
 			if(execute(stack_a, stack_b, PB) == -1)
 				return (-1);
-			if(is_in_range(stack_b,chunk,chunk->mid,chunk->end))
+			if(is_in_range(stack_b,chunk,chunk->start,chunk->mid))
 			{
 				if(execute(stack_a, stack_b, RB) == -1)
 					return (-1);
@@ -136,7 +150,8 @@ int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 		}
 		else
 		{
-			if(i < stack_a->size / 2)
+			pos = get_position(stack_a, chunk);
+			if(pos < stack_a->size / 2)
 			{
 				if(execute(stack_a, stack_b, RA) == -1)
 					return (-1);
@@ -147,7 +162,6 @@ int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 					return (-1);
 			}
 		}
-		i++;
 	}
 	return (0);
 }
@@ -156,63 +170,211 @@ int find_max(t_vec *stack)
 {
 	int i;
 	int max;
+	int index;
 
 	i = 0;
+	index = 0;
 	max = stack->vector[0];
 	while(i < stack->size)
 	{
 		if(stack->vector[i] > max)
-			max = i;
+		{
+			max = stack->vector[i];
+			index = i;
+		}
 		i++;
 	}
 	return (max);
 }
 
-int push_back(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+
+int find_insert_position(t_vec *stack_a, int value)
 {
-	int max;
-	(void)chunk;
-	while(!is_empty(stack_b))
+    int i;
+
+    if (is_empty(stack_a))
+        return 0;
+
+    i = 0;
+    while (i < stack_a->size - 1)
+    {
+        if (value > stack_a->vector[i] && value < stack_a->vector[i + 1])
+            return i + 1;
+        i++;
+    }
+    if (value < stack_a->vector[0])
+        return 0;
+    return i + 1;
+}
+
+//if (stack_b->vector[stack_b->size - 1] == stack_b->vector[max])
+int max_in_b(int max,t_vec *sorted)
+{
+	int i;
+
+	i = 0;
+	while(i < sorted->size)
 	{
-		max = find_max(stack_b);
-		if(stack_b->vector[stack_b->size - 1] == stack_b->vector[max])
+		if(sorted->vector[i] == max)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+//start
+
+int find_max_index(t_vec *stack_b, int limit)
+{
+    int i;
+    int max;
+    int max_index;
+
+    if (stack_b->size == 0)
+        return (-1);
+    i = 0;
+    max = stack_b->vector[0];
+    max_index = 0;
+    while (i < stack_b->size && i < limit)
+    {
+        if (stack_b->vector[i] > max)
+        {
+            max = stack_b->vector[i];
+            max_index = i;
+        }
+        i++;
+    }
+    return (max_index);
+}
+
+int smart_sort(t_vec *stack_a, t_vec *stack_b)
+{
+    int down;
+    int target_index;
+    int target_value;
+
+    down = 0;
+    while (!is_empty(stack_b) || down > 0)
+    {
+        target_index = find_max_index(stack_b, stack_b->size);
+
+        // If no suitable number found in stack_b but we have numbers down in stack_a
+        if (target_index == -1 && down > 0)
+        {
+            // Bring back numbers from bottom of stack_a
+            while (down > 0)
+            {
+                if (execute(stack_a, stack_b, RRA) == -1)
+                    return (-1);
+                down--;
+            }
+            continue;
+        }
+
+        // If we found a target number in stack_b
+        if (target_index != -1)
+        {
+            target_value = stack_b->vector[target_index];
+
+            // If target is at top of stack_b
+            if (target_index == 0)
+            {
+                if (execute(stack_a, stack_b, PA) == -1)
+                    return (-1);
+            }
+            // If we can store current number at bottom of stack_a
+            else if (down == 0 || stack_b->vector[0] > stack_a->vector[0])
+            {
+                if (execute(stack_a, stack_b, PA) == -1)
+                    return (-1);
+                if (execute(stack_a, stack_b, RA) == -1)
+                    return (-1);
+                down++;
+            }
+            // Need to rotate stack_b to get target number
+            else
+            {
+                // Choose rotation direction based on target position
+                if (target_index <= stack_b->size / 2)
+                {
+                    if (execute(stack_a, stack_b, RB) == -1)
+                        return (-1);
+                }
+                else
+                {
+                    if (execute(stack_a, stack_b, RRB) == -1)
+                        return (-1);
+                }
+            }
+        }
+    }
+    return (0);
+}
+
+//end
+
+int push_back(t_vec *stack_a, t_vec *stack_b, t_chunk *chunk)
+{
+    int max;
+	int down;
+    int pos;
+    (void)chunk;
+
+	down = 0;
+    while (!is_empty(stack_b))
+    {
+		max = chunk->sorted->vector[chunk->sorted->size - 1];
+		if(max_in_b(max,chunk->sorted))
 		{
-			if(execute(stack_a, stack_b, PA) == -1)
-				return (-1);
-		}
-		else
-		{
-			if(is_empty(stack_a) || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
+			if (stack_b->vector[stack_b->size - 1] == max)
+        	{
+        	    if (execute(stack_a, stack_b, PA) == -1)
+        	        return (-1);
+				chunk->sorted->size--;
+        	}
+			else if(down == 0 || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
 			{
-				if(execute(stack_a, stack_b, PA) == -1)
+				if (execute(stack_a, stack_b, PA) == -1)
 					return (-1);
-				if(execute(stack_a, stack_b, RA) == -1)
+				if (execute(stack_a, stack_b, RA) == -1)
 					return (-1);
 			}
 			else
 			{
-				if(max <= stack_b->size / 2)
+				pos = find_insert_position(stack_a, stack_b->vector[stack_b->size - 1]);
+				while (pos > 0 && pos < stack_a->size)
 				{
-					if(execute(stack_a, stack_b, RB) == -1)
-						return (-1);
-				}
-				else
-				{
-					if(execute(stack_a, stack_b, RRB) == -1)
-						return (-1);
+					if (pos <= stack_a->size / 2)
+					{
+						if (execute(stack_a, stack_b, RA) == -1)
+							return (-1);
+					}
+					else
+					{
+						if (execute(stack_a, stack_b, RRA) == -1)
+							return (-1);
+					}
+					pos--;
 				}
 			}
 		}
+		else
+		{
+			execute(stack_a, stack_b, RRA);
+			down--;
+			chunk->sorted->size--;
+		}
 	}
-	return (0);
+    return (0);
 }
 
 int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 {
 	if(push_to_b(stack_a,stack_b,chunk) == -1)
 		return (-1);
-	if(push_back(stack_a,stack_b,chunk) == -1)
-		return (-1);
+	// if(push_back(stack_a,stack_b,chunk) == -1)
+	// 	return (-1);
+	// smart_sort(stack_a,stack_b);
 	return (0);
 }
 
