@@ -11,7 +11,7 @@ int p(t_vec *pop_stack, t_vec *push_stack,char *msg)
 	return (0);
 }
 
-int rrr(t_vec *stack,char *msg)
+int rr(t_vec *stack,char *msg)
 {
 	int i;
 	int temp;
@@ -31,7 +31,7 @@ int rrr(t_vec *stack,char *msg)
 	return (0);
 }
 
-int rr(t_vec *stack,char *msg)
+int rrr(t_vec *stack,char *msg)
 {
 	int tmp;
 	int i;

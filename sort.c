@@ -38,32 +38,31 @@ void init_chunk(t_chunk *chunk)
 	chunk->end = chunk->mid + chunk->offset;
 }
 
-void push_to_stack(t_vec *sorted, t_vec **stack_a)
+void push_to_stack(t_vec *sorted, t_vec **stack)
 {
 	int i;
 
-	i = 0;
-	while(i < sorted->size)
+	i = sorted->size - 1;
+	while(i >= 0)
 	{
-		push(*stack_a, sorted->vector[i]);
-		i++;
+		push(*stack, sorted->vector[i]);
+		i--;
 	}
 }
 
-int is_in_range(t_vec *stack, t_chunk *chunk,int start, int end)
+int is_in_range(t_vec *stack, t_chunk *chunk, int start, int end)
 {
-	int i;
-	int num;
-
-	i = start;
-	num = pop(stack);
-	while(i < end)
+    if (!stack || !chunk || start < 0 || end > chunk->sorted->size)
 	{
-		if(num == chunk->sorted->vector[i])
-			return (1);
-		i++;
+        return (0);
 	}
-	return (0);
+    while (start < end)
+    {
+        if (stack->vector[stack->size - 1] == chunk->sorted->vector[start])
+            return (1);
+        start++;
+    }
+    return (0);
 }
 
 int check_range(t_vec *stack,t_vec *sorted,int start,int end)
@@ -72,11 +71,15 @@ int check_range(t_vec *stack,t_vec *sorted,int start,int end)
 	int is_in_range;
 	int j;
 
+    if (!stack || !sorted || start < 0 || end > sorted->size)
+	{
+    	return (0);
+	}
 	i = start;
-	is_in_range = 0;
 	while(i < end)
 	{
 		j = 0;
+		is_in_range = 0;
 		while(j < stack->size)
 		{
 			if(sorted->vector[i] == stack->vector[j])
@@ -84,10 +87,10 @@ int check_range(t_vec *stack,t_vec *sorted,int start,int end)
 				is_in_range = 1;
 				break;
 			}
-			if(!is_in_range)
-				return (0);
 			j++;
 		}
+		if(!is_in_range)
+			return (0);
 		i++;
 	}
 	return (1);
@@ -112,7 +115,8 @@ void update_offset(t_vec *stack_b,t_chunk *chunk)
 	}
 }
 
-int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+
+int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 {
 	int i;
 
@@ -143,9 +147,40 @@ int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 					return (-1);
 			}
 		}
-		printf("mid:%d\nstart: %d\nend:%d\n",chunk->mid,chunk->start,chunk->end);
 		i++;
 	}
+	return (0);
+}
+
+int push_back(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+{
+	while(!is_empty(stack_b))
+	{
+		if(is_in_range(stack_b,chunk,chunk->mid,chunk->end))
+		{
+			if(execute(stack_a, stack_b, PA) == -1)
+				return (-1);
+			if(is_in_range(stack_a,chunk,chunk->start,chunk->mid))
+			{
+				if(execute(stack_a, stack_b, RA) == -1)
+					return (-1);
+			}
+		}
+		else
+		{
+			if(execute(stack_a, stack_b, RRA) == -1)
+				return (-1);
+		}
+	}
+	return (0);
+}
+
+int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+{
+	if(push_to_b(stack_a,stack_b,chunk) == -1)
+		return (-1);
+	if(push_back(stack_a,stack_b,chunk) == -1)
+		return (-1);
 	return (0);
 }
 
@@ -158,19 +193,20 @@ void sort(t_chunk *chunk)
 	constructor(&stack_b);
 	push_to_stack(chunk->sorted, &stack_a);
 	init_chunk(chunk);
-	// for(int i = 0; i < chunk->sorted->size; i++)
-	// {
-	// 	printf("%d\n",chunk->sorted->vector[i]);
-	// }
 	big_sort(stack_a, stack_b,chunk);
-	// printf("stack_b\n");
 	// for(int i = 0; i < stack_a->size; i++)
 	// {
 	// 	printf("%d\n",stack_a->vector[i]);
 	// }
-	printf("size: %d\n",stack_b->size);
-	for(int i = 0; i < stack_b->size; i++)
-	{
-		printf("%d\n",stack_b->vector[i]);
-	}
+	// printf("----------------\n");
+	// for(int i = 0; i < chunk->sorted->size; i++)
+	// {
+	// 	printf("%d\n",chunk->sorted->vector[i]);
+	// }
+	// printf("----------------\n");
+	// for(int i = stack_b->size - 1; i >= 0; i--)
+	// {
+	// 	printf("%d\n",stack_b->vector[i]);
+	// }
 }
+
