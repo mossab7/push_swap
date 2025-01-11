@@ -152,24 +152,56 @@ int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 	return (0);
 }
 
+int find_max(t_vec *stack)
+{
+	int i;
+	int max;
+
+	i = 0;
+	max = stack->vector[0];
+	while(i < stack->size)
+	{
+		if(stack->vector[i] > max)
+			max = i;
+		i++;
+	}
+	return (max);
+}
+
 int push_back(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 {
+	int max;
+	(void)chunk;
 	while(!is_empty(stack_b))
 	{
-		if(is_in_range(stack_b,chunk,chunk->mid,chunk->end))
+		max = find_max(stack_b);
+		if(stack_b->vector[stack_b->size - 1] == stack_b->vector[max])
 		{
 			if(execute(stack_a, stack_b, PA) == -1)
 				return (-1);
-			if(is_in_range(stack_a,chunk,chunk->start,chunk->mid))
-			{
-				if(execute(stack_a, stack_b, RA) == -1)
-					return (-1);
-			}
 		}
 		else
 		{
-			if(execute(stack_a, stack_b, RRA) == -1)
-				return (-1);
+			if(is_empty(stack_a) || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
+			{
+				if(execute(stack_a, stack_b, PA) == -1)
+					return (-1);
+				if(execute(stack_a, stack_b, RA) == -1)
+					return (-1);
+			}
+			else
+			{
+				if(max <= stack_b->size / 2)
+				{
+					if(execute(stack_a, stack_b, RB) == -1)
+						return (-1);
+				}
+				else
+				{
+					if(execute(stack_a, stack_b, RRB) == -1)
+						return (-1);
+				}
+			}
 		}
 	}
 	return (0);
