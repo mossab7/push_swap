@@ -13,7 +13,7 @@ $(LIBFT) :
 	make -C $(LIBFT_DIR)
 
 $(NAME) : $(MSRC)
-	$(CC) $(CFLAGS) -o $(NAME) $(MSRC) -L$(LIBFT_DIR) -lft
+	$(CC) $(CFLAGS) -o $(NAME) $(MSRC) -L$(LIBFT_DIR) -lft -fPIE
 
 clean :
 	make -C $(LIBFT_DIR) clean

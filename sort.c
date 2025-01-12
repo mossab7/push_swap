@@ -131,56 +131,53 @@ int get_position(t_vec *stack, t_chunk *s_chunk)
 }
 
 
-int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
-{
-	int pos;
+// int push_to_b(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+// {
+// 	int pos;
 
-	while(!is_empty(stack_a))
-	{
-		update_offset(stack_b,chunk);
-		if(is_in_range(stack_a,chunk,chunk->start,chunk->end))
-		{
-			if(execute(stack_a, stack_b, PB) == -1)
-				return (-1);
-			if(is_in_range(stack_b,chunk,chunk->start,chunk->mid))
-			{
-				if(execute(stack_a, stack_b, RB) == -1)
-					return (-1);
-			}
-		}
-		else
-		{
-			pos = get_position(stack_a, chunk);
-			if(pos < stack_a->size / 2)
-			{
-				if(execute(stack_a, stack_b, RA) == -1)
-					return (-1);
-			}
-			else
-			{
-				if(execute(stack_a, stack_b, RRA) == -1)
-					return (-1);
-			}
-		}
-	}
-	return (0);
-}
+// 	while(!is_empty(stack_a))
+// 	{
+// 		update_offset(stack_b,chunk);
+// 		if(is_in_range(stack_a,chunk,chunk->start,chunk->end))
+// 		{
+// 			if(execute(stack_a, stack_b, PB) == -1)
+// 				return (-1);
+// 			if(is_in_range(stack_b,chunk,chunk->start,chunk->mid))
+// 			{
+// 				if(execute(stack_a, stack_b, RB) == -1)
+// 					return (-1);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			pos = get_position(stack_a, chunk);
+// 			if(pos < stack_a->size / 2)
+// 			{
+// 				if(execute(stack_a, stack_b, RA) == -1)
+// 					return (-1);
+// 			}
+// 			else
+// 			{
+// 				if(execute(stack_a, stack_b, RRA) == -1)
+// 					return (-1);
+// 			}
+// 		}
+// 	}
+// 	return (0);
+// }
 
 int find_max(t_vec *stack)
 {
 	int i;
 	int max;
-	int index;
 
 	i = 0;
-	index = 0;
 	max = stack->vector[0];
 	while(i < stack->size)
 	{
 		if(stack->vector[i] > max)
 		{
 			max = stack->vector[i];
-			index = i;
 		}
 		i++;
 	}
@@ -247,22 +244,268 @@ int find_max_index(t_vec *stack_b, int limit)
     return (max_index);
 }
 
-int smart_sort(t_vec *stack_a, t_vec *stack_b)
-{
-    int down;
-    int target_index;
-    int target_value;
+// int smart_sort(t_vec *stack_a, t_vec *stack_b)
+// {
+//     int down;
+//     int target_index;
+//     int target_value;
 
-    down = 0;
-    while (!is_empty(stack_b) || down > 0)
+//     down = 0;
+//     while (!is_empty(stack_b) || down > 0)
+//     {
+//         target_index = find_max_index(stack_b, stack_b->size);
+
+//         // If no suitable number found in stack_b but we have numbers down in stack_a
+//         if (target_index == -1 && down > 0)
+//         {
+//             // Bring back numbers from bottom of stack_a
+//             while (down > 0)
+//             {
+//                 if (execute(stack_a, stack_b, RRA) == -1)
+//                     return (-1);
+//                 down--;
+//             }
+//             continue;
+//         }
+
+//         // If we found a target number in stack_b
+//         if (target_index != -1)
+//         {
+//             target_value = stack_b->vector[target_index];
+
+//             // If target is at top of stack_b
+//             if (target_index == 0)
+//             {
+//                 if (execute(stack_a, stack_b, PA) == -1)
+//                     return (-1);
+//             }
+//             // If we can store current number at bottom of stack_a
+//             else if (down == 0 || stack_b->vector[0] > stack_a->vector[0])
+//             {
+//                 if (execute(stack_a, stack_b, PA) == -1)
+//                     return (-1);
+//                 if (execute(stack_a, stack_b, RA) == -1)
+//                     return (-1);
+//                 down++;
+//             }
+//             // Need to rotate stack_b to get target number
+//             else
+//             {
+//                 // Choose rotation direction based on target position
+//                 if (target_index <= stack_b->size / 2)
+//                 {
+//                     if (execute(stack_a, stack_b, RB) == -1)
+//                         return (-1);
+//                 }
+//                 else
+//                 {
+//                     if (execute(stack_a, stack_b, RRB) == -1)
+//                         return (-1);
+//                 }
+//             }
+//         }
+//     }
+//     return (0);
+// }
+
+//end
+
+// int push_back(t_vec *stack_a, t_vec *stack_b, t_chunk *chunk)
+// {
+//     int max;
+// 	int down;
+//     int pos;
+//     (void)chunk;
+
+// 	down = 0;
+//     while (!is_empty(stack_b))
+//     {
+// 		max = chunk->sorted->vector[chunk->sorted->size - 1];
+// 		if(max_in_b(max,chunk->sorted))
+// 		{
+// 			if (stack_b->vector[stack_b->size - 1] == max)
+//         	{
+//         	    if (execute(stack_a, stack_b, PA) == -1)
+//         	        return (-1);
+// 				chunk->sorted->size--;
+//         	}
+// 			else if(down == 0 || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
+// 			{
+// 				if (execute(stack_a, stack_b, PA) == -1)
+// 					return (-1);
+// 				if (execute(stack_a, stack_b, RA) == -1)
+// 					return (-1);
+// 			}
+// 			else
+// 			{
+// 				pos = find_insert_position(stack_a, stack_b->vector[stack_b->size - 1]);
+// 				while (pos > 0 && pos < stack_a->size)
+// 				{
+// 					if (pos <= stack_a->size / 2)
+// 					{
+// 						if (execute(stack_a, stack_b, RA) == -1)
+// 							return (-1);
+// 					}
+// 					else
+// 					{
+// 						if (execute(stack_a, stack_b, RRA) == -1)
+// 							return (-1);
+// 					}
+// 					pos--;
+// 				}
+// 			}
+// 		}
+// 		else
+// 		{
+// 			execute(stack_a, stack_b, RRA);
+// 			down--;
+// 			chunk->sorted->size--;
+// 		}
+// 	}
+//     return (0);
+// }
+
+// int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+// {
+// 	if(push_to_b(stack_a,stack_b,chunk) == -1)
+// 		return (-1);
+// 	// if(push_back(stack_a,stack_b,chunk) == -1)
+// 	// 	return (-1);
+// 	// smart_sort(stack_a,stack_b);
+// 	return (0);
+// }
+
+int sort_three(t_vec *stack)
+{
+    int first;
+    int second;
+    int third;
+
+    if (stack->size < 3)
+        return (0);
+        
+    first = stack->vector[stack->size - 1];   // Top element
+    second = stack->vector[stack->size - 2];  // Middle element
+    third = stack->vector[stack->size - 3];   // Bottom element
+
+    if (first > second && second < third && first < third)
+    {
+        if (execute(stack, NULL, SA) == -1)
+            return (-1);
+    }
+    else if (first > second && second > third)
+    {
+        if (execute(stack, NULL, SA) == -1 || 
+            execute(stack, NULL, RRA) == -1)
+            return (-1);
+    }
+    else if (first > second && second < third && first > third)
+    {
+        if (execute(stack, NULL, RA) == -1)
+            return (-1);
+    }
+    else if (first < second && second > third && first < third)
+    {
+        if (execute(stack, NULL, SA) == -1 ||
+            execute(stack, NULL, RA) == -1)
+            return (-1);
+    }
+    else if (first < second && second > third && first > third)
+    {
+        if (execute(stack, NULL, RRA) == -1)
+            return (-1);
+    }
+    // If first < second && second < third, it's already sorted
+
+    return (0);
+}
+
+int sort_top_three(t_vec *stack_a)
+{
+    // Check if we have at least 3 elements
+    if (stack_a->size < 3)
+        return (0);
+
+    // Sort only the top 3 elements
+    return sort_three(stack_a);
+}
+
+// First, modify push_to_b to handle separate chunk updates
+int push_to_b(t_vec *stack_a, t_vec *stack_b, t_chunk *chunk)
+{
+    int pos;
+    int numbers_to_keep = 3;  // Keep top 3 numbers in stack_a
+
+    while (stack_a->size > numbers_to_keep)
+    {
+        // Check if lower chunk is complete
+        if (check_range(stack_b, chunk->sorted, chunk->start, chunk->mid))
+        {
+            if (chunk->start - chunk->offset >= 0)
+                chunk->start -= chunk->offset;
+            else
+                chunk->start = 0;
+        }
+        
+        // Check if upper chunk is complete
+        if (check_range(stack_b, chunk->sorted, chunk->mid, chunk->end))
+        {
+            if (chunk->end + chunk->offset < chunk->sorted->size)
+                chunk->end += chunk->offset;
+            else
+                chunk->end = chunk->sorted->size;
+        }
+
+        if (is_in_range(stack_a, chunk, chunk->start, chunk->end))
+        {
+            if (execute(stack_a, stack_b, PB) == -1)
+                return (-1);
+            if (is_in_range(stack_b, chunk, chunk->start, chunk->mid))
+            {
+                if (execute(stack_a, stack_b, RB) == -1)
+                    return (-1);
+            }
+        }
+        else
+        {
+            pos = get_position(stack_a, chunk);
+            if (pos < stack_a->size / 2)
+            {
+                if (execute(stack_a, stack_b, RA) == -1)
+                    return (-1);
+            }
+            else
+            {
+                if (execute(stack_a, stack_b, RRA) == -1)
+                    return (-1);
+            }
+        }
+    }
+    return sort_top_three(stack_a);  // New function to sort top 3 numbers
+}
+
+// New optimized push_back function using up and down areas
+int optimized_push_back(t_vec *stack_a, t_vec *stack_b)
+{
+    int up = 0;    // Track numbers in upper area
+    int down = 0;  // Track numbers in bottom area
+    int target_index;
+    int can_push_down;
+
+    while (!is_empty(stack_b) || up > 0 || down > 0)
     {
         target_index = find_max_index(stack_b, stack_b->size);
-
-        // If no suitable number found in stack_b but we have numbers down in stack_a
-        if (target_index == -1 && down > 0)
+        
+        // No target in stack_b, handle numbers in stack_a
+        if (target_index == -1)
         {
-            // Bring back numbers from bottom of stack_a
-            while (down > 0)
+            if (up > 0)
+            {
+                if (execute(stack_a, stack_b, RA) == -1)
+                    return (-1);
+                up--;
+            }
+            else if (down > 0)
             {
                 if (execute(stack_a, stack_b, RRA) == -1)
                     return (-1);
@@ -271,30 +514,51 @@ int smart_sort(t_vec *stack_a, t_vec *stack_b)
             continue;
         }
 
-        // If we found a target number in stack_b
-        if (target_index != -1)
+        // Target found in stack_b
+        if (target_index == 0)  // Target at top of stack_b
         {
-            target_value = stack_b->vector[target_index];
-
-            // If target is at top of stack_b
-            if (target_index == 0)
+            // Rotate stack_a until only one number remains in up area
+            while (up > 1)
             {
-                if (execute(stack_a, stack_b, PA) == -1)
+                if (execute(stack_a, stack_b, RA) == -1)
                     return (-1);
+                up--;
             }
-            // If we can store current number at bottom of stack_a
-            else if (down == 0 || stack_b->vector[0] > stack_a->vector[0])
+            if (execute(stack_a, stack_b, PA) == -1)
+                return (-1);
+            if (up == 1)  // One number in up area, swap if needed
             {
+                if (stack_a->vector[stack_a->size - 1] < stack_a->vector[stack_a->size - 2])
+                    if (execute(stack_a, stack_b, SA) == -1)
+                        return (-1);
+                up = 0;
+            }
+        }
+        else  // Target not at top
+        {
+            can_push_down = (down == 0 || stack_b->vector[0] > stack_a->vector[0]);
+            
+            if (can_push_down)
+            {
+                // Push to bottom area
                 if (execute(stack_a, stack_b, PA) == -1)
                     return (-1);
+                // Rotate while head of stack_a is smaller than head of stack_b and we have numbers in up area
+                while (up > 0 && !is_empty(stack_b) && 
+                       stack_a->vector[stack_a->size - 1] < stack_b->vector[0])
+                {
+                    if (execute(stack_a, stack_b, RA) == -1)
+                        return (-1);
+                    up--;
+                    down++;
+                }
                 if (execute(stack_a, stack_b, RA) == -1)
                     return (-1);
                 down++;
             }
-            // Need to rotate stack_b to get target number
             else
             {
-                // Choose rotation direction based on target position
+                // Rotate stack_b towards target
                 if (target_index <= stack_b->size / 2)
                 {
                     if (execute(stack_a, stack_b, RB) == -1)
@@ -311,71 +575,14 @@ int smart_sort(t_vec *stack_a, t_vec *stack_b)
     return (0);
 }
 
-//end
-
-int push_back(t_vec *stack_a, t_vec *stack_b, t_chunk *chunk)
+// Modified big_sort to use the optimized functions
+int big_sort(t_vec *stack_a, t_vec *stack_b, t_chunk *chunk)
 {
-    int max;
-	int down;
-    int pos;
-    (void)chunk;
-
-	down = 0;
-    while (!is_empty(stack_b))
-    {
-		max = chunk->sorted->vector[chunk->sorted->size - 1];
-		if(max_in_b(max,chunk->sorted))
-		{
-			if (stack_b->vector[stack_b->size - 1] == max)
-        	{
-        	    if (execute(stack_a, stack_b, PA) == -1)
-        	        return (-1);
-				chunk->sorted->size--;
-        	}
-			else if(down == 0 || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
-			{
-				if (execute(stack_a, stack_b, PA) == -1)
-					return (-1);
-				if (execute(stack_a, stack_b, RA) == -1)
-					return (-1);
-			}
-			else
-			{
-				pos = find_insert_position(stack_a, stack_b->vector[stack_b->size - 1]);
-				while (pos > 0 && pos < stack_a->size)
-				{
-					if (pos <= stack_a->size / 2)
-					{
-						if (execute(stack_a, stack_b, RA) == -1)
-							return (-1);
-					}
-					else
-					{
-						if (execute(stack_a, stack_b, RRA) == -1)
-							return (-1);
-					}
-					pos--;
-				}
-			}
-		}
-		else
-		{
-			execute(stack_a, stack_b, RRA);
-			down--;
-			chunk->sorted->size--;
-		}
-	}
+    if (push_to_b(stack_a, stack_b, chunk) == -1)
+        return (-1);
+    if (optimized_push_back(stack_a, stack_b) == -1)
+        return (-1);
     return (0);
-}
-
-int	big_sort(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
-{
-	if(push_to_b(stack_a,stack_b,chunk) == -1)
-		return (-1);
-	// if(push_back(stack_a,stack_b,chunk) == -1)
-	// 	return (-1);
-	// smart_sort(stack_a,stack_b);
-	return (0);
 }
 
 void sort(t_chunk *chunk)
