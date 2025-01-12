@@ -125,5 +125,6 @@ void						free_resource(void (*free_func)(void *),
 void						detach_resource(t_alloc_record **memory_records,
 								void *target_resource);
 int							constructor(t_vec **vector);
+int							ft_abs(int n);
 
 #endif
