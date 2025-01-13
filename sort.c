@@ -202,11 +202,20 @@ void push_back_to_a(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 	int max;
 	int pos;
 	down = 0;
+
+
 	while(!is_empty(stack_b))
 	{
-		max = stack_b->vector[stack_b->size - 1];
+
+		max = chunk->sorted->vector[chunk->sorted->size - 1];
 		pos = get_max_pos(stack_b,max);
-		if(pos > 0)
+		// printf("pos %d\n",pos);
+		// printf("stack_b size %d\n",stack_b->size);
+		// printf("max %d\n",max);
+		// for(int i = stack_b->size -1; i >= 0; i--)
+		// 	printf("stack_b %d|stack_a %d\n",stack_b->vector[i],stack_a->vector[i]);
+		// getc(stdin);
+		if(pos >= 0)
 		{
 			if(max == stack_b->vector[stack_b->size - 1])
 			{
@@ -221,7 +230,7 @@ void push_back_to_a(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 			}
 			else
 			{
-				if(pos >= stack_b->size / 2)
+				if(pos <= stack_b->size / 2)
 					execute(stack_a,stack_b,RB);
 				else
 					execute(stack_a,stack_b,RRB);
@@ -233,12 +242,9 @@ void push_back_to_a(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 			down--;
 			chunk->sorted->size -= 1;
 		}
-		while(down > 0)
-		{
-			execute(stack_a,stack_b,RRA);
-			down--;
-		}
 	}
+	while(down--)
+		execute(stack_a,stack_b,RRA);
 }
 
 void	sort(t_chunk *chunk)
