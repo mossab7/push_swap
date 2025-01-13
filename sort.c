@@ -36,28 +36,6 @@ void stack_sort(t_vec *stack)
 	}
 }
 
-void stack_index_dereference(t_vec *sorted, t_vec *stack_a)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while(i < stack_a->size)
-	{
-		j = 0;
-		while(j < sorted->size)
-		{
-			if(stack_a->vector[i] == sorted->vector[j])
-			{
-				stack_a->vector[i] = j;
-				break;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
 void	stack_p(t_vec *stack)
 {
 	int i;
@@ -76,11 +54,11 @@ int all_in_range(t_vec *sorted, int start, int end, t_vec *stack_b)
     int j;
     int found;
 
-    found = 0;
     i = start;
     while (i <= end)
     {
         j = 0;
+		found = 0;
         while (j < stack_b->size)
         {
             if (stack_b->vector[j] == sorted->vector[i])
@@ -91,10 +69,7 @@ int all_in_range(t_vec *sorted, int start, int end, t_vec *stack_b)
             j++;
         }
         if (!found)
-        {
             return 0;
-        }
-        found = 0;
         i++;
     }
     return 1;
@@ -252,17 +227,5 @@ void	sort(t_chunk *chunk)
 	stack_sort(chunk->sorted);
 	init_chunk(chunk);
 	push_to_b(stack_a,stack_b,chunk);
-	// printf("start: %d\n",chunk->start);
-	// printf("mid: %d\n",chunk->mid);
-	// printf("end: %d\n",chunk->end);
-	// printf("offset: %d\n",chunk->offset);
-	// printf("size: %d\n",chunk->sorted->size);
-	//stack_p(stack_a);
-	//stack_index_dereference(chunk->sorted, stack_a);
-	//pre_sort(stack_a,stack_b);
-	//big_sort(stack_a,stack_b);
-	// stack_p(stack_a);
-	// printf("sorted 1 %d\n",chunk->sorted->vector[0]);
-	// printf("sorted size %d\n",chunk->sorted->vector[chunk->sorted->size - 1]);
 	push_back_to_a(stack_a,stack_b,chunk);
 }

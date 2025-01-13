@@ -9,8 +9,7 @@ int main(int argc, char **argv)
 		ft_putstr_fd("Error <./push_swap args>\n",2);
 		return (1);
 	}
-	chunk = (t_chunk *)allocate_tracked_memory(sizeof(chunk));
-	constructor(&chunk->sorted);
+	chunk = (t_chunk *)allocate_tracked_memory(sizeof(t_chunk));
 	chunk->sorted = parse(argc - 1,argv + 1);
 	if(!chunk->sorted)
 	{
