@@ -209,12 +209,6 @@ void push_back_to_a(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
 
 		max = chunk->sorted->vector[chunk->sorted->size - 1];
 		pos = get_max_pos(stack_b,max);
-		// printf("pos %d\n",pos);
-		// printf("stack_b size %d\n",stack_b->size);
-		// printf("max %d\n",max);
-		// for(int i = stack_b->size -1; i >= 0; i--)
-		// 	printf("stack_b %d|stack_a %d\n",stack_b->vector[i],stack_a->vector[i]);
-		// getc(stdin);
 		if(pos >= 0)
 		{
 			if(max == stack_b->vector[stack_b->size - 1])

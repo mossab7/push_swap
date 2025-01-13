@@ -39,26 +39,6 @@ void	cleanup_memory_tracker(t_alloc_record **memory_records)
 	*memory_records = NULL;
 }
 
-// void	detach_resource(t_alloc_record **memory_records, void *target_resource)
-// {
-// 	t_alloc_record	**current;
-// 	t_alloc_record	*target_node;
-
-// 	if(!memory_records || !*memory_records || !target_resource)
-// 		return;
-// 	current = memory_records;
-// 	while((*current)->resource != target_resource)
-// 	{
-// 		current = &(*current)->next;
-// 	}
-// 	if(!*current)
-// 		return;
-// 	target_node = *current;
-// 	*current = ((*current)->next)->next;
-// 	free_resource(target_node->free_func,target_node->resource);
-// }
-
-
 void detach_resource(t_alloc_record **memory_records, void *target_resource)
 {
     t_alloc_record *current;
