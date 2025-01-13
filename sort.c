@@ -102,11 +102,6 @@ int all_in_range(t_vec *sorted, int start, int end, t_vec *stack_b)
 
 void update_offset(t_chunk *chunk,t_vec *stack_b)
 {
-	// printf("start: %d\n",chunk->start);
-	// printf("mid: %d\n",chunk->mid);
-	// printf("end: %d\n",chunk->end);
-	// printf("update offset..\n");
-	//getc(stdin);
 	if(all_in_range(chunk->sorted,chunk->start,chunk->mid,stack_b))
 	{
 		if(chunk->start - chunk->offset < 0)
@@ -179,9 +174,70 @@ void push_to_b(t_vec *stack_a, t_vec *stack_b,t_chunk *chunk)
 			pos--;
 		}
 		execute(stack_a,stack_b,PB);
-		if(in_range(stack_b->vector[stack_b->size - 1],chunk->sorted,chunk->start,chunk->mid))
+		if(in_range(stack_b->vector[stack_b->size - 1],chunk->sorted,chunk->start,chunk->mid - 1))
 			execute(stack_a,stack_b,RB);
 		update_offset(chunk,stack_b);
+	}
+}
+
+int get_max_pos(t_vec *stack_b, int max)
+{
+	int i;
+	int pos;
+	i = stack_b->size - 1;
+	pos = 0;
+	while(i >= 0)
+	{
+		if(stack_b->vector[i] == max)
+			return (pos);
+		i--;
+		pos++;
+	}
+	return (-1);
+}
+
+void push_back_to_a(t_vec *stack_a,t_vec *stack_b,t_chunk *chunk)
+{
+	int down;
+	int max;
+	int pos;
+	down = 0;
+	while(!is_empty(stack_b))
+	{
+		max = stack_b->vector[stack_b->size - 1];
+		pos = get_max_pos(stack_b,max);
+		if(pos > 0)
+		{
+			if(max == stack_b->vector[stack_b->size - 1])
+			{
+				execute(stack_a,stack_b,PA);
+				chunk->sorted->size -= 1;
+			}
+			else if(down == 0 || stack_b->vector[stack_b->size - 1] > stack_a->vector[0])
+			{
+				execute(stack_a,stack_b,PA);
+				execute(stack_a,stack_b,RA);
+				down++;
+			}
+			else
+			{
+				if(pos >= stack_b->size / 2)
+					execute(stack_a,stack_b,RB);
+				else
+					execute(stack_a,stack_b,RRB);
+			}
+		}
+		else
+		{
+			execute(stack_a,stack_b,RRA);
+			down--;
+			chunk->sorted->size -= 1;
+		}
+		while(down > 0)
+		{
+			execute(stack_a,stack_b,RRA);
+			down--;
+		}
 	}
 }
 
@@ -206,4 +262,7 @@ void	sort(t_chunk *chunk)
 	//pre_sort(stack_a,stack_b);
 	//big_sort(stack_a,stack_b);
 	// stack_p(stack_a);
+	// printf("sorted 1 %d\n",chunk->sorted->vector[0]);
+	// printf("sorted size %d\n",chunk->sorted->vector[chunk->sorted->size - 1]);
+	push_back_to_a(stack_a,stack_b,chunk);
 }
