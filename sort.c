@@ -72,33 +72,41 @@ void	stack_p(t_vec *stack)
 
 int all_in_range(t_vec *sorted, int start, int end, t_vec *stack_b)
 {
-	int i;
-	int j;
-	int found;
+    int i;
+    int j;
+    int found;
 
-	found = 0;
-	i = start;
-	while(i <= end)
-	{
-		j = 0;
-		while(j < stack_b->size)
-		{
-			if(stack_b->vector[stack_b->size - 1] == sorted->vector[i])
-			{
-				found = 1;
-				break;
-			}
-			if(!found)
-				return (0);
-			j++;
-		}
-		i++;
-	}
-	return (1);
+    found = 0;
+    i = start;
+    while (i <= end)
+    {
+        j = 0;
+        while (j < stack_b->size)
+        {
+            if (stack_b->vector[j] == sorted->vector[i])
+            {
+                found = 1;
+                break;
+            }
+            j++;
+        }
+        if (!found)
+        {
+            return 0;
+        }
+        found = 0;
+        i++;
+    }
+    return 1;
 }
 
 void update_offset(t_chunk *chunk,t_vec *stack_b)
 {
+	// printf("start: %d\n",chunk->start);
+	// printf("mid: %d\n",chunk->mid);
+	// printf("end: %d\n",chunk->end);
+	// printf("update offset..\n");
+	//getc(stdin);
 	if(all_in_range(chunk->sorted,chunk->start,chunk->mid,stack_b))
 	{
 		if(chunk->start - chunk->offset < 0)
@@ -142,26 +150,37 @@ void init_chunk(t_chunk *chunk)
 	chunk->end = chunk->mid + chunk->offset;
 }
 
+int get_pos(t_vec *stack_a, t_chunk *chunk)
+{
+	int i;
+	int pos;
+
+	pos = 0;
+	i = stack_a->size - 1;
+	while(i >= 0)
+	{
+		if(in_range(stack_a->vector[i],chunk->sorted,chunk->start,chunk->end))
+			return (pos);
+		i--;
+		pos++;
+	}
+	return (-1);
+}
+
 void push_to_b(t_vec *stack_a, t_vec *stack_b,t_chunk *chunk)
 {
+	int pos;
 	while(!is_empty(stack_a))
 	{
-		while(1)
+		pos = get_pos(stack_a,chunk);
+		while(pos > 0)
 		{
-			if(!in_range(stack_a->vector[stack_a->size - 1],chunk->sorted,chunk->start,chunk->end))
-			{
-				execute(stack_a,stack_b,RA);
-			}
-			else
-			{
-				execute(stack_a,stack_b,PB);
-				break;
-			}
+			execute(stack_a,stack_b,RA);
+			pos--;
 		}
+		execute(stack_a,stack_b,PB);
 		if(in_range(stack_b->vector[stack_b->size - 1],chunk->sorted,chunk->start,chunk->mid))
-		{
-			execute(stack_b,stack_a,RB);
-		}
+			execute(stack_a,stack_b,RB);
 		update_offset(chunk,stack_b);
 	}
 }
@@ -177,12 +196,12 @@ void	sort(t_chunk *chunk)
 	stack_sort(chunk->sorted);
 	init_chunk(chunk);
 	push_to_b(stack_a,stack_b,chunk);
-	printf("start: %d\n",chunk->start);
-	printf("mid: %d\n",chunk->mid);
-	printf("end: %d\n",chunk->end);
-	printf("offset: %d\n",chunk->offset);
-	printf("size: %d\n",chunk->sorted->size);
-	stack_p(stack_a);
+	// printf("start: %d\n",chunk->start);
+	// printf("mid: %d\n",chunk->mid);
+	// printf("end: %d\n",chunk->end);
+	// printf("offset: %d\n",chunk->offset);
+	// printf("size: %d\n",chunk->sorted->size);
+	//stack_p(stack_a);
 	//stack_index_dereference(chunk->sorted, stack_a);
 	//pre_sort(stack_a,stack_b);
 	//big_sort(stack_a,stack_b);
