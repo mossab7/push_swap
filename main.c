@@ -2,21 +2,22 @@
 
 int main(int argc, char **argv)
 {
-	t_vec *sorted;
+	t_chunk *chunk;
 
 	if(argc < 2)
 	{
 		ft_putstr_fd("Error <./push_swap args>\n",2);
 		return (1);
 	}
-	constructor(&sorted);
-	sorted = parse(argc - 1,argv + 1);
-	if(!sorted)
+	chunk = (t_chunk *)allocate_tracked_memory(sizeof(chunk));
+	constructor(&chunk->sorted);
+	chunk->sorted = parse(argc - 1,argv + 1);
+	if(!chunk->sorted)
 	{
 		cleanup_memory_tracker(get_memory_tracker());
 		return (1);
 	}
-	sort(sorted);
+	sort(chunk);
 	cleanup_memory_tracker(get_memory_tracker());
 	return (0);
 }
