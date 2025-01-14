@@ -1,7 +1,5 @@
 #include "checker.h"
 
-//reverse stack_a
-
 void	push_to_stack(t_vec *sorted, t_vec **stack_a)
 {
 	int i;
