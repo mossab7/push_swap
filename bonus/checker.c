@@ -28,13 +28,34 @@ int is_sorted(t_vec *stack)
 	return (1);
 }
 
+int	read_instructions(t_vec *parsed,t_vec *stack_a,t_vec *stack_b)
+{
+	char *instruction;
+
+	push_to_stack(parsed,&stack_a);
+	while(1)
+	{
+		instruction = get_next_line(0);
+		if(!instruction)
+			return (1);
+		if(instruction[ft_strlen(instruction)] != '\n')
+			ft_strjoin(instruction,"\n");
+		if (execute(stack_a,stack_b,instruction) == -1)
+		{
+			ft_putstr_fd("Error\n",2);
+			cleanup_memory_tracker(get_memory_tracker());
+			return (0);
+		}
+		detach_resource(get_memory_tracker(),instruction);
+	}
+}
+
 int main(int ac,char **av)
 {
 	t_vec *stack_a;
 	t_vec *stack_b;
 	t_vec *parsed;
 
-	char *instruction;
 	if(ac < 2)
 		return (0);
 	parsed = parse(ac-1,av+1);
@@ -46,22 +67,8 @@ int main(int ac,char **av)
 	}
 	constructor(&stack_a);
 	constructor(&stack_b);
-	push_to_stack(parsed,&stack_a);
-	while(1)
-	{
-		instruction = get_next_line(0);
-		if(!instruction)
-			break;
-		if(instruction[ft_strlen(instruction)] != '\n')
-			ft_strjoin(instruction,"\n");
-		if (execute(stack_a,stack_b,instruction) == -1)
-		{
-			ft_putstr_fd("Error\n",2);
-			cleanup_memory_tracker(get_memory_tracker());
-			return (0);
-		}
-		detach_resource(get_memory_tracker(),instruction);
-	}
+	if(!read_instructions(parsed,stack_a,stack_b))
+		return (0);
 	if(is_sorted(stack_a) && stack_b->size == 0)
 		ft_putstr_fd("OK\n",1);
 	else
