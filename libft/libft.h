@@ -126,5 +126,6 @@ void						detach_resource(t_alloc_record **memory_records,
 								void *target_resource);
 int							constructor(t_vec **vector);
 int							ft_abs(int n);
+size_t						ft_numlen(long n);
 
 #endif

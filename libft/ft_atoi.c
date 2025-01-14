@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <limits.h>
 
 static int	ft_isspace(int c)
 {
@@ -34,6 +35,8 @@ long	ft_atoi(const char *str)
 	}
 	while (ft_isdigit(*str))
 	{
+		if ((result * 10) + (*str - '0') < 0)
+			return (LONG_MAX);
 		result = (result * 10) + (*str - '0');
 		str++;
 	}

@@ -1,4 +1,4 @@
-#include "push_swap.h"
+#include "checker.h"
 #include <limits.h>
 
 int is_valid_number(t_vec *vector,long num)

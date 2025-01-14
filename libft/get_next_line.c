@@ -14,7 +14,7 @@
 
 char	*free_stored(char **content)
 {
-	free(*content);
+	detach_resource(get_memory_tracker(), *content);
 	*content = NULL;
 	return (NULL);
 }
@@ -58,13 +58,13 @@ char	*extract_line(t_stored *stored)
 		remaining = ft_strdup(&stored->content[stored->last_pos]);
 		if (!remaining)
 		{
-			free(line);
+			detach_resource(get_memory_tracker(), line);
 			return (free_stored(&(stored->content)));
 		}
 	}
 	else
 		remaining = NULL;
-	free(stored->content);
+	detach_resource(get_memory_tracker(), stored->content);
 	stored->content = remaining;
 	return (line);
 }
@@ -75,21 +75,21 @@ size_t	read_to_buffer(t_stored *stored, int fd)
 	char	*temp;
 	ssize_t	bytes_read;
 
-	buffer = malloc(BUFFER_SIZE + 1);
+	buffer = allocate_tracked_memory(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (-1);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read <= 0)
 	{
-		free(buffer);
+		detach_resource(get_memory_tracker(), buffer);
 		return (bytes_read);
 	}
 	buffer[bytes_read] = '\0';
 	temp = ft_strjoin(stored->content, buffer);
-	free(buffer);
+	detach_resource(get_memory_tracker(), buffer);
 	if (!temp)
 		return (-1);
-	free(stored->content);
+	detach_resource(get_memory_tracker(), stored->content);
 	stored->content = temp;
 	return (bytes_read);
 }
@@ -107,7 +107,7 @@ char	*get_next_line(int fd)
 		bytes_read = read_to_buffer(&stored, fd);
 		if (bytes_read < 0)
 		{
-			free (stored.content);
+			detach_resource(get_memory_tracker(), stored.content);
 			stored.content = NULL;
 			return (NULL);
 		}
