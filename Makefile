@@ -26,6 +26,6 @@ clean :
 	make -C $(LIBFT_DIR) clean
 
 fclean : clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(BONUS_NAME)
 
 re : fclean all

@@ -1,13 +1,13 @@
 #include "push_swap.h"
 
-void	push_to_stack(t_vec *sorted, t_vec **stack_a)
+void	push_to_stack(t_vec *sorted, t_vec *stack_a)
 {
 	int i;
 
 	i = sorted->size - 1;
 	while(i >= 0)
 	{
-		push(*stack_a,sorted->vector[i]);
+		push(stack_a,sorted->vector[i]);
 		i--;
 	}
 }
@@ -223,7 +223,7 @@ void	sort(t_chunk *chunk)
 
 	constructor(&stack_a);
 	constructor(&stack_b);
-	push_to_stack(chunk->sorted,&stack_a);
+	push_to_stack(chunk->sorted,stack_a);
 	stack_sort(chunk->sorted);
 	init_chunk(chunk);
 	push_to_b(stack_a,stack_b,chunk);
