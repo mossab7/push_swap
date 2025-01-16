@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/16 01:38:18 by mbouhia           #+#    #+#             */
+/*   Updated: 2025/01/16 01:38:18 by mbouhia          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "checker.h"
 
-int		execute(t_vec *stack_a, t_vec *stack_b, char *op)
+int	execute(t_vec *stack_a, t_vec *stack_b, char *op)
 {
 	if (ft_strncmp(op, "sa\n", ft_strlen("sa\n")) == 0)
 		return (swap(stack_a, NULL));
 	else if (ft_strncmp(op, "sb\n", ft_strlen("sb\n")) == 0)
-		return (swap(stack_b,NULL));
+		return (swap(stack_b, NULL));
 	else if (ft_strncmp(op, "ss\n", ft_strlen("ss\n")) == 0)
 		return (swap(stack_a, NULL) && swap(stack_b, "ss\n"));
 	else if (ft_strncmp(op, "pa\n", ft_strlen("pa\n")) == 0)

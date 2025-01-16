@@ -1,72 +1,92 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   small_sort.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/16 01:28:42 by mbouhia           #+#    #+#             */
+/*   Updated: 2025/01/16 01:28:42 by mbouhia          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
-int get_index(t_vec *stack, int find_max)
-{
-    int i = 0;
-    int target_idx = 0;
-    int target = stack->vector[0];
 
-    while (i < stack->size)
-    {
-        if ((find_max && stack->vector[i] > target) ||
-            (!find_max && stack->vector[i] < target))
-        {
-            target = stack->vector[i];
-            target_idx = i;
-        }
-        i++;
-    }
-    return (target_idx);
+int	get_index(t_vec *stack)
+{
+	int	i;
+	int	target_idx;
+	int	target;
+	int	j;
+
+	j = 0;
+	target = stack->vector[0];
+	target_idx = 0;
+	i = stack->size - 1;
+	while (i >= 0)
+	{
+		if (stack->vector[i] <= target)
+		{
+			target = stack->vector[i];
+			target_idx = j;
+		}
+		j++;
+		i--;
+	}
+	return (target_idx);
 }
 
-void sort_three(t_vec *stack_a, t_vec *stack_b)
+void	sort_three(t_vec *stack_a)
 {
-    int top = stack_a->vector[0];
-    int mid = stack_a->vector[1];
-    int bot = stack_a->vector[2];
+	int	top;
+	int	mid;
+	int	bot;
 
-    if (top > mid && mid < bot && top < bot)
-        execute(stack_a, stack_b, SA);
-    else if (top > mid && mid > bot)
-    {
-        execute(stack_a, stack_b, SA);
-        execute(stack_a, stack_b, RRA);
-    }
-    else if (top > mid && mid < bot && top > bot)
-        execute(stack_a, stack_b, RA);
-    else if (top < mid && mid > bot && top < bot)
-    {
-        execute(stack_a, stack_b, SA);
-        execute(stack_a, stack_b, RA);
-    }
-    else if (top < mid && mid > bot && top > bot)
-        execute(stack_a, stack_b, RRA);
+	top = stack_a->vector[2];
+	mid = stack_a->vector[1];
+	bot = stack_a->vector[0];
+	if (top > mid && mid < bot && top < bot)
+		execute(stack_a, NULL, SA);
+	else if (top > mid && mid > bot)
+	{
+		execute(stack_a, NULL, SA);
+		execute(stack_a, NULL, RRA);
+	}
+	else if (top > mid && mid < bot && top > bot)
+		execute(stack_a, NULL, RA);
+	else if (top < mid && mid > bot && top < bot)
+	{
+		execute(stack_a, NULL, SA);
+		execute(stack_a, NULL, RA);
+	}
+	else if (top < mid && mid > bot && top > bot)
+		execute(stack_a, NULL, RRA);
 }
 
-int sort_five(t_vec *stack_a, t_vec *stack_b)
+int	sort_five(t_vec *stack_a, t_vec *stack_b)
 {
-    int idx;
-    
-    idx = get_index(stack_a, 0);
-    while (idx > 0)
-    {
-        execute(stack_a, stack_b, RA);
-        idx--;
-    }
-    execute(stack_a, stack_b, PB);
-    
-    idx = get_index(stack_a, 0);
-    while (idx > 0)
-    {
-        execute(stack_a, stack_b, RA);
-        idx--;
-    }
-    execute(stack_a, stack_b, PB);
-    
-    sort_three(stack_a, stack_b);
-    
-    execute(stack_a, stack_b, PA);
-    execute(stack_a, stack_b, PA);
-    
-    return (0);
+	int	idx;
+	int	i;
+
+	i = 0;
+	while (i < 2)
+	{
+		idx = get_index(stack_a);
+		if (idx == stack_a->size - 1)
+			execute(stack_a, NULL, RRA);
+		else
+		{
+			while (idx > 0)
+			{
+				execute(stack_a, stack_b, RA);
+				idx--;
+			}
+		}
+		execute(stack_a, stack_b, PB);
+		i++;
+	}
+	sort_three(stack_a);
+	execute(stack_a, stack_b, PA);
+	execute(stack_a, stack_b, PA);
+	return (0);
 }

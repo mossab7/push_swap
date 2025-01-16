@@ -111,11 +111,13 @@ char						*get_next_line(int fd);
 t_alloc_record				**get_memory_tracker(void);
 t_alloc_record				*create_memory_record(void *ptr,
 								void (*deallocator)(void *));
-void						register_memory_allocation(t_alloc_record **memory_records,
+void						register_memory_allocation(
+								t_alloc_record **memory_records,
 								t_alloc_record *new_record);
 void						handle_allocation_failure(void *ptr);
 void						*allocate_tracked_memory(size_t size);
-void						cleanup_memory_tracker(t_alloc_record **memory_records);
+void						cleanup_memory_tracker(
+								t_alloc_record **memory_records);
 int							resize(t_vec *vector);
 int							push(t_vec *vector, int num);
 int							pop(t_vec *vector);

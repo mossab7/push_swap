@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/16 01:28:41 by mbouhia           #+#    #+#             */
+/*   Updated: 2025/01/16 01:28:41 by mbouhia          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-int		execute(t_vec *stack_a, t_vec *stack_b, e_op op)
+int	execute(t_vec *stack_a, t_vec *stack_b, t_op op)
 {
 	if (op == SA)
 		return (swap(stack_a, "sa\n"));

@@ -21,7 +21,8 @@ t_alloc_record	**get_memory_tracker(void)
 	return (&memory_records);
 }
 
-t_alloc_record	*create_memory_record(void *resource, void (*deallocator)(void *))
+t_alloc_record	*create_memory_record(void *resource,
+		void (*deallocator)(void *))
 {
 	t_alloc_record	*new_record;
 
@@ -68,7 +69,7 @@ void	*allocate_tracked_memory(size_t size)
 
 	resource = ft_calloc(size, 1);
 	handle_allocation_failure(resource);
-	register_memory_allocation(get_memory_tracker(), create_memory_record(resource,
-			free));
+	register_memory_allocation(get_memory_tracker(),
+		create_memory_record(resource, free));
 	return (resource);
 }

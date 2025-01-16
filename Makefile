@@ -5,7 +5,7 @@ LIBFT_DIR = libft
 NAME = push_swap
 BONUS_NAME = checker
 
-MSRC = main.c parse.c sort.c operations.c execute.c
+MSRC = main.c parse.c sort.c operations.c execute.c small_sort.c push_swap_utils.c chunk_utils.c
 BSRC = bonus/checker.c bonus/parse.c bonus/operations.c bonus/execute.c
 
 
